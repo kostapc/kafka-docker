@@ -14,18 +14,17 @@ LABEL org.label-schema.name="kafka" \
       org.label-schema.schema-version="1.0" \
       maintainer="wurstmeister"
 
-ENV KAFKA_VERSION=$kafka_version \
-    SCALA_VERSION=$scala_version \
-    KAFKA_HOME=/opt/kafka
-
-ENV PATH=${PATH}:${KAFKA_HOME}/bin
+ENV KAFKA_VERSION=$kafka_version
+ENV SCALA_VERSION=$scala_version
+ENV KAFKA_HOME=/opt/kafka
+ENV PATH="${PATH}:${KAFKA_HOME}/bin"
 
 COPY download-kafka.sh start-kafka.sh broker-list.sh create-topics.sh versions.sh /tmp2/
 
 RUN set -eux ; \
     apt-get update ; \
     apt-get upgrade -y ; \
-    apt-get install -y --no-install-recommends jq net-tools curl wget ; \
+    apt-get install -y --no-install-recommends jq net-tools curl wget dos2unix; \
 ### BEGIN docker for CI tests
     apt-get install -y --no-install-recommends gnupg lsb-release ; \
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg ; \
@@ -40,9 +39,10 @@ RUN set -eux ; \
     apt -f install ; \
 ### END docker for CI tests
 ### BEGIN other for CI tests
-    apt-get install -y --no-install-recommends netcat ; \
+    apt-get install -y --no-install-recommends netcat
 ### END other for CI tests
-    chmod a+x /tmp2/*.sh ; \
+
+RUN dos2unix /tmp2/*.sh ; chmod a+x /tmp2/*.sh ; \
     mv /tmp2/start-kafka.sh /tmp2/broker-list.sh /tmp2/create-topics.sh /tmp2/versions.sh /usr/bin ; \
     sync ; \
     /tmp2/download-kafka.sh ; \
@@ -51,6 +51,8 @@ RUN set -eux ; \
     ln -s /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION} ${KAFKA_HOME} ; \
     rm -rf /tmp2 ; \
     rm -rf /var/lib/apt/lists/*
+
+RUN echo -e "${KAFKA_HOME}\n" ; ls ${KAFKA_HOME}
 
 COPY overrides /opt/overrides
 
