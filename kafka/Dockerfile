@@ -8,7 +8,7 @@ ARG build_date=unspecified
 LABEL org.label-schema.name="kafka" \
       org.label-schema.description="Apache Kafka" \
       org.label-schema.build-date="${build_date}" \
-      org.label-schema.vcs-url="https://github.com/wurstmeister/kafka-docker" \
+      org.label-schema.vcs-url="https://github.com/kostapc/kafka-docker" \
       org.label-schema.vcs-ref="${vcs_ref}" \
       org.label-schema.version="${scala_version}_${kafka_version}" \
       org.label-schema.schema-version="1.0" \
@@ -25,19 +25,6 @@ RUN set -eux ; \
     apt-get update ; \
     apt-get upgrade -y ; \
     apt-get install -y --no-install-recommends jq net-tools curl wget dos2unix; \
-### BEGIN docker for CI tests
-    apt-get install -y --no-install-recommends gnupg lsb-release ; \
-	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg ; \
-	echo \
-  		"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  		$(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null ; \
-    apt-get update ; \
-    apt-get install -y --no-install-recommends docker-ce-cli ; \
-    apt remove -y gnupg lsb-release ; \
-    apt clean ; \
-    apt autoremove -y ; \
-    apt -f install ; \
-### END docker for CI tests
 ### BEGIN other for CI tests
     apt-get install -y --no-install-recommends netcat
 ### END other for CI tests

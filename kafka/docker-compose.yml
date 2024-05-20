@@ -7,7 +7,7 @@ services:
   kafka1:
     depends_on:
       - zookeeper
-    build: .
+    build: ..
     #image: kafka-local
     ports:
       - "9092:9092"
