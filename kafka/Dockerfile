@@ -12,7 +12,7 @@ LABEL org.label-schema.name="kafka" \
       org.label-schema.vcs-ref="${vcs_ref}" \
       org.label-schema.version="${scala_version}_${kafka_version}" \
       org.label-schema.schema-version="1.0" \
-      maintainer="wurstmeister"
+      maintainer="kostapc"
 
 ENV KAFKA_VERSION=$kafka_version
 ENV SCALA_VERSION=$scala_version
@@ -24,9 +24,9 @@ COPY download-kafka.sh start-kafka.sh broker-list.sh create-topics.sh versions.s
 RUN set -eux ; \
     apt-get update ; \
     apt-get upgrade -y ; \
-    apt-get install -y --no-install-recommends jq net-tools curl wget dos2unix; \
+    apt-get install -y --no-install-recommends jq net-tools curl wget dos2unix;
 ### BEGIN other for CI tests
-    apt-get install -y --no-install-recommends netcat
+#    apt-get install -y --no-install-recommends netcat
 ### END other for CI tests
 
 RUN dos2unix /tmp2/*.sh ; chmod a+x /tmp2/*.sh ; \
